@@ -2,19 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct data{
+struct Evento{
+	struct Data;
+	struct 
+};
+struct Data{
 	int dia, mes, ano;
 };
 
-struct pessoa{
-	char nome[30], telefone[20];
-	struct data nascimento;
+struct horario{
+	int hora, minuto;
 };
 
 // Apenas mais um exemplo de estrutura que usa a 'data' (sem relevância neste código...)
 struct pedido{
 	int codigo;
-	struct data data_pedido;
+	struct Data data_pedido;
 };
 
 void conflito(struct data *p);
