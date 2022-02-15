@@ -2,22 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define Z 50
+
 struct Evento{
-	struct Data;
-	struct 
+	struct Data data;
+	struct Horario inicio;
+	struct Horario fim;
+	char descricao[Z] ;
+	char local[Z];
 };
+
 struct Data{
 	int dia, mes, ano;
 };
 
-struct horario{
+struct Horario{
 	int hora, minuto;
-};
-
-// Apenas mais um exemplo de estrutura que usa a 'data' (sem relevância neste código...)
-struct pedido{
-	int codigo;
-	struct Data data_pedido;
 };
 
 void conflito(struct data *p);
