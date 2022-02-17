@@ -7,9 +7,9 @@
 #define Z 50
 
 struct evento{
-	struct data *data;
-	struct horario *inicio;
-	struct horario *fim;
+	struct data data;
+	struct horario inicio;
+	struct horario fim;
 	char descricao[Z] ;
 	char local[Z];
 };
