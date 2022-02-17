@@ -6,13 +6,6 @@
 
 #define Z 50
 
-struct evento{
-	struct data data;
-	struct horario inicio;
-	struct horario fim;
-	char descricao[Z] ;
-	char local[Z];
-};
 
 struct data{
 	int dia, mes, ano;
@@ -20,6 +13,14 @@ struct data{
 
 struct horario{
 	int hora, minuto;
+};
+
+struct evento{
+	struct data data;
+	struct horario inicio;
+	struct horario fim;
+	char descricao[Z] ;
+	char local[Z];
 };
 
 void conflito(struct data *p);
