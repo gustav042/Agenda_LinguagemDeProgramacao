@@ -94,38 +94,16 @@ int main(int argc, char *argv[]) {
 				
 			case 6:
 				printf("Digite um ano: ");
-				le_data()
 				scanf(" %d", &data_busca);
 				mostra_vetor_por_ano( v, n, data_busca );
 				system("PAUSE");
 				break;
-			
 		}
-		
+	
 	}while( opcao != 7 );
-	
-	free( v );
-	
-	/*
-	
-	struct evento fulano;
-	le_evento( &fulano );
-	mostra_evento( fulano );
-	
-	struct data y;
-	le_data( &y );	
-	fulano.nascimento = y;	
-	mostra_evento( fulano );
-	
-	*/
-	
+	free( v );	
 	return 0;
 }
-//	struct data data;
-//	struct horario inicio;
-//	struct horario fim;
-//	char descricao[Z] ;
-//	char local[Z];
 
 void le_evento( struct evento *p ){
 	printf("Digite a data: ");
@@ -176,15 +154,6 @@ void mostra_vetor( struct evento *v, int n ){
 			mostra_evento( v[i] );
 		}
 	}
-}
-
-int busca_evento( struct evento *v, int n, char *nome ){
-	int i;
-	for( i = 0 ; i < n ; i++ )
-		if( strcmpi( v[i].nome, nome ) == 0 )
-			return i;
-	
-	return -1;
 }
 
 void ordena_vetor( struct evento *v, int n ){
