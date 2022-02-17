@@ -7,9 +7,9 @@
 #define Z 50
 
 struct evento{
-	struct data data;
-	struct horario inicio;
-	struct horario fim;
+	struct data *data;
+	struct horario *inicio;
+	struct horario *fim;
 	char descricao[Z] ;
 	char local[Z];
 };
@@ -171,23 +171,15 @@ void ordena_vetor( struct evento *v, int n ){
 }
 
 
-int compara_evento_nome( struct evento x, struct evento y ){
-	return strcmpi( x.nome, y.nome );	
-}
-
-void mostra_vetor_por_letra( struct evento *v, int n , char letra ){
+void mostra_descricao( struct evento *v, int n ){
 	int i;
-	printf("Lista de eventos cujo nome comeca com a letra %c\n", letra);
-	for( i = 0 ; i < n ; i++ )
-		if( v[i].nome[0] == letra )
-			mostra_evento( v[i] );
-}
+	char descricao[Z];
+	printf("Digite uma descricao: ");
+	scanf("%[^\n]", &descricao);
+	for( i = 0 ; i < n-1 ; i++ ){
+		if( compara_evento_descricao(v[i], descricao))
+			mostra_evento(v[i]);}}
 
-void mostra_vetor_por_data( struct evento *v, int n , int data ){
-	int i;
-	mostra_data(v[0].data);
-	printf("Lista de eventos nessa data:\n"); 
-	for( i = 0 ; i < n ; i++ )
-		if( v[i].data >=  data_busca)
-			mostra_evento( v[i] );
+int compara_evento_descricao( struct evento x, char descricao ){
+	return strcmp( x.descricao, descricao );	
 }
