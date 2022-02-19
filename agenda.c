@@ -1,56 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define Z 40
 
 struct data{
 	int dia, mes, ano;
 };
 
-struct pessoa{
-	char nome[30], telefone[20];
-	struct data nascimento;
+struct horario{
+	int hora, minuto;
 };
 
-// Apenas mais um exemplo de estrutura que usa a 'data' (sem relevância neste código...)
-struct pedido{
-	int codigo;
-	struct data data_pedido;
+struct evento{
+	struct data data;
+	struct horario inicio;
+	struct horario fim;
+	char descricao[Z] ;
+	char local[Z];
 };
 
-void le_pessoa( struct pessoa *p );
-void mostra_pessoa( struct pessoa x );
+void le_evento( struct evento *p );
+void mostra_evento( struct evento x );
 
 void le_data( struct data *p );
 void mostra_data (struct data x );
 
-int compara_pessoa_nome( struct pessoa x, struct pessoa y );
+void le_horario( struct horario *p );
+void mostra_horario (struct horario x );
 
-void mostra_vetor( struct pessoa *v, int n );
-int busca_pessoa( struct pessoa *v, int n, char *nome );
-void ordena_vetor( struct pessoa *v, int n );
-void mostra_vetor_por_letra( struct pessoa *v, int n , char letra );
-void mostra_vetor_por_ano( struct pessoa *v, int n , int ano );
+int compara_evento_descricao( struct evento x, struct evento y );
+
+void mostra_vetor( struct evento *v, int n );
+int busca_evento( struct evento *v, int n, char *descricao );
+void ordena_vetor( struct evento *v, int n );
+void mostra_vetor_por_letra( struct evento *v, int n , char letra );
+void mostra_vetor_por_ano( struct evento *v, int n , int ano );
 
 int main(int argc, char *argv[]) {
-	int i, n = 0;  // Quantidade de pessoas
-	struct pessoa *v = NULL; // Ponteiro para o vetor de pessoas
-	char nome[30];
+	int i, n = 0;  // Quantidade de eventos
+	struct evento *v = NULL; // Ponteiro para o vetor de eventos
+	char descricao[30];
 	int idx, ano;
 	char letra;
 	
 	FILE *f;
-	
 	f = fopen( "cadastro.txt" , "rt" );
 	if( f != NULL){
 		// Carrega dados do arquivo, alocando o vetor v;
-		fscanf( f , "%d", &n); // Carrega a quantidade de pessoas (1a info no arquivo)
-		v = malloc( sizeof( struct pessoa ) * n );
+		fscanf( f , "%d", &n); // Carrega a quantidade de eventos (1a info no arquivo)
+		v = malloc( sizeof( struct evento ) * n );
 		for( i = 0 ; i < n ; i++ ){
-			fscanf( f, " %[^\n]", v[i].nome);
-			fscanf( f, " %[^\n]", v[i].telefone);
-			fscanf( f, "%d", &v[i].nascimento.dia);
-			fscanf( f, "%d", &v[i].nascimento.mes);
-			fscanf( f, "%d", &v[i].nascimento.ano);
+			fscanf( f, "%d", &v[i].data.dia);
+			fscanf( f, "%d", &v[i].data.mes);
+			fscanf( f, "%d", &v[i].data.ano);
+			fscanf( f, " %[^\n]", v[i].descricao);
+			fscanf( f, " %[^\n]", v[i].local);
+
 		}
 		fclose( f );
 		printf("%d registros carregados com sucesso!\n", n);
@@ -67,8 +72,8 @@ int main(int argc, char *argv[]) {
 		switch( opcao ){
 			case 1:
 				n++;
-				v = realloc( v, sizeof( struct pessoa ) * n );
-				le_pessoa( &v[n-1] );
+				v = realloc( v, sizeof( struct evento ) * n );
+				le_evento( &v[n-1] );
 				//ordena_vetor( v, n ); // para o trabalho...
 				system("PAUSE");
 				break;
@@ -79,15 +84,15 @@ int main(int argc, char *argv[]) {
 				break;
 				
 			case 3:
-				printf("Digite o nome da pessoa a ser buscada: ");
-				scanf(" %[^\n]", nome );
+				printf("Digite o descricao da evento a ser buscada: ");
+				scanf(" %[^\n]", descricao );
 				
-				idx = busca_pessoa( v, n, nome );
+				idx = busca_evento( v, n, descricao );
 				if( idx == -1 )
-					printf("Pessoa nao encotrada!\n");
+					printf("evento nao encotrada!\n");
 				else{
 					printf("%d : ", idx+1 );
-					mostra_pessoa( v[idx] );
+					mostra_evento( v[idx] );
 				}
 				system("PAUSE");
 				break;
@@ -118,10 +123,11 @@ int main(int argc, char *argv[]) {
 	
 	// Grava vetor no arquivo!
 	f = fopen( "cadastro.txt", "wt" );
-	fprintf( f, "%d\n", n); // 1a informação do arquivo é a quantidade de pessoas
+	fprintf( f, "%d\n", n); // 1a informação do arquivo é a quantidade de eventos
 	for( i = 0 ; i < n ; i++ ){
-		fprintf( f, "%s\n%s\n", v[i].nome, v[i].telefone);
-		fprintf( f, "%d\n%d\n%d\n", v[i].nascimento.dia, v[i].nascimento.mes, v[i].nascimento.ano);	
+		fprintf( f, "%d\n%d\n%d\n", v[i].data.dia, v[i].data.mes, v[i].data.ano);	
+		fprintf( f, "%s\n%s\n", v[i].descricao, v[i].local);
+
 	}
 	fclose( f );
 	
@@ -129,32 +135,33 @@ int main(int argc, char *argv[]) {
 	
 	/*
 	
-	struct pessoa fulano;
-	le_pessoa( &fulano );
-	mostra_pessoa( fulano );
+	struct evento fulano;
+	le_evento( &fulano );
+	mostra_evento( fulano );
 	
 	struct data y;
 	le_data( &y );	
-	fulano.nascimento = y;	
-	mostra_pessoa( fulano );
+	fulano.data = y;	
+	mostra_evento( fulano );
 	
 	*/
 	
 	return 0;
 }
 
-void le_pessoa( struct pessoa *p ){
-	printf("Digite o nome: ");
-	scanf(" %[^\n]", p->nome);
-	printf("Digite o telefone: ");
-	scanf(" %[^\n]", p->telefone);
-	printf("Digite a data de nascimento:\n");
-	le_data( &p->nascimento );
+void le_evento( struct evento *p ){
+	printf("Digite a data:\n");
+	le_data( &p->data );
+	printf("Digite a descricao: ");
+	scanf(" %[^\n]", p->descricao);
+	printf("Digite o local: ");
+	scanf(" %[^\n]", p->local);
+
 }
 
-void mostra_pessoa( struct pessoa x ){
-	printf("(%s, %s, [", x.nome, x.telefone);
-	mostra_data( x.nascimento );
+void mostra_evento( struct evento x ){
+	printf("(%s, %s, [", x.descricao, x.local);
+	mostra_data( x.data );
 	printf("])\n");
 }
 
@@ -171,59 +178,59 @@ void mostra_data (struct data x ){
 	printf("%d/%d/%d", x.dia, x.mes, x.ano);
 }
 
-void mostra_vetor( struct pessoa *v, int n ){
+void mostra_vetor( struct evento *v, int n ){
 	if( n == 0 )
-		printf("Nao ha pessoas cadastradas!\n");
+		printf("Nao ha eventos cadastradas!\n");
 	else{
 		int i;
-		printf("Lista de pessoas cadatradas:\n");
+		printf("Lista de eventos cadatradas:\n");
 		for( i = 0 ; i < n ; i++ ){
 			printf("%d : ", i+1 );
-			mostra_pessoa( v[i] );
+			mostra_evento( v[i] );
 		}
 	}
 }
 
-int busca_pessoa( struct pessoa *v, int n, char *nome ){
+int busca_evento( struct evento *v, int n, char *descricao ){
 	int i;
 	for( i = 0 ; i < n ; i++ )
-		if( strcmp( v[i].nome, nome ) == 0 )
+		if( strcmp( v[i].descricao, descricao ) == 0 )
 			return i;
 	
 	return -1;
 }
 
-void ordena_vetor( struct pessoa *v, int n ){
+void ordena_vetor( struct evento *v, int n ){
 	int i;
 	for( i = 0 ; i < n-1 ; i++ ){
 		int j, i_menor = i;
 		for( j = i+1 ; j < n ; j++ ){
-			if( compara_pessoa_nome( v[j], v[i_menor ] ) < 0 )
+			if( compara_evento_descricao( v[j], v[i_menor ] ) < 0 )
 				i_menor = j;
 		}
-		struct pessoa temp = v[i];
+		struct evento temp = v[i];
 		v[i] = v[i_menor];
 		v[i_menor] = temp;
 	}
 }
 
 
-int compara_pessoa_nome( struct pessoa x, struct pessoa y ){
-	return strcmp( x.nome, y.nome );	
+int compara_evento_descricao( struct evento x, struct evento y ){
+	return strcmp( x.descricao, y.descricao );	
 }
 
-void mostra_vetor_por_letra( struct pessoa *v, int n , char letra ){
+void mostra_vetor_por_letra( struct evento *v, int n , char letra ){
 	int i;
-	printf("Lista de pessoas cujo nome comeca com a letra %c\n", letra);
+	printf("Lista de eventos cujo descricao comeca com a letra %c\n", letra);
 	for( i = 0 ; i < n ; i++ )
-		if( v[i].nome[0] == letra )
-			mostra_pessoa( v[i] );
+		if( v[i].descricao[0] == letra )
+			mostra_evento( v[i] );
 }
 
-void mostra_vetor_por_ano( struct pessoa *v, int n , int ano ){
+void mostra_vetor_por_ano( struct evento *v, int n , int ano ){
 	int i;
-	printf("Lista de pessoas que nesceram a partir do ano %d\n", ano);
+	printf("Lista de eventos no ano %d:\n", ano);
 	for( i = 0 ; i < n ; i++ )
-		if( v[i].nascimento.ano >= ano )
-			mostra_pessoa( v[i] );
+		if( v[i].data.ano == ano )
+			mostra_evento( v[i] );
 }
