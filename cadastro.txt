@@ -1,4 +1,4 @@
-2
+3
 6
 3
 2022
@@ -9,3 +9,8 @@ pira
 2022
 volta as aulas
 Udesc
+3
+4
+2022
+presencial
+udesc

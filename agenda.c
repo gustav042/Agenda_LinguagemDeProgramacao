@@ -34,13 +34,13 @@ void mostra_vetor( struct evento *v, int n );
 int busca_evento( struct evento *v, int n, char *descricao );
 void ordena_vetor( struct evento *v, int n );
 void mostra_vetor_por_letra( struct evento *v, int n , char letra );
-void mostra_vetor_por_ano( struct evento *v, int n , int ano );
+void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano );
 
 int main(int argc, char *argv[]) {
 	int i, n = 0;  // Quantidade de eventos
 	struct evento *v = NULL; // Ponteiro para o vetor de eventos
 	char descricao[30];
-	int idx, ano;
+	int idx, dia, mes, ano;
 	char letra;
 	
 	FILE *f;
@@ -65,8 +65,8 @@ int main(int argc, char *argv[]) {
 	int opcao;
 	do{
 		system("CLS");
-		printf("1-Cadastrar\n2-Mostrar lista\n3-Buscar\n4-Ordenar\n");
-		printf("5-Buscar por letra inicial\n6-Buscar por ano\n7-Sair\n");
+		printf("1-Cadastrar\n2-Mostrar lista\n3-Mostra por data\n4-Mostra por descricao\n");
+		printf("5-Buscar por letra inicial\n6-Ordena\n7-Sair\n");
 		scanf("%d", &opcao);
 		
 		switch( opcao ){
@@ -84,6 +84,18 @@ int main(int argc, char *argv[]) {
 				break;
 				
 			case 3:
+				printf("Digite um dia: ");
+				scanf(" %d", &dia);
+				printf("Digite um mes: ");
+				scanf(" %d", &mes);
+				printf("Digite um ano: ");
+				scanf(" %d", &ano);
+				mostra_vetor_por_data( v, n, dia, mes, ano );
+				system("PAUSE");
+				break;
+
+				
+			case 4:
 				printf("Digite o descricao da evento a ser buscada: ");
 				scanf(" %[^\n]", descricao );
 				
@@ -97,12 +109,6 @@ int main(int argc, char *argv[]) {
 				system("PAUSE");
 				break;
 				
-			case 4:
-				ordena_vetor( v, n );
-				printf("Vetor ordenado com sucesso!\n");
-				system("PAUSE");
-				break;
-			
 			case 5:
 				printf("Digite uma letra: ");
 				scanf(" %c", &letra);
@@ -111,11 +117,11 @@ int main(int argc, char *argv[]) {
 				break;
 				
 			case 6:
-				printf("Digite um ano: ");
-				scanf(" %d", &ano);
-				mostra_vetor_por_ano( v, n, ano );
+				ordena_vetor( v, n );
+				printf("Vetor ordenado com sucesso!\n");
 				system("PAUSE");
 				break;
+			
 			
 		}
 		
@@ -227,10 +233,10 @@ void mostra_vetor_por_letra( struct evento *v, int n , char letra ){
 			mostra_evento( v[i] );
 }
 
-void mostra_vetor_por_ano( struct evento *v, int n , int ano ){
+void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano ){
 	int i;
-	printf("Lista de eventos no ano %d:\n", ano);
+	printf("Lista de eventos na data [%d/%d/%d]:\n", dia, mes, ano);
 	for( i = 0 ; i < n ; i++ )
-		if( v[i].data.ano == ano )
+		if( (v[i].data.dia == dia) && (v[i].data.mes == mes) && (v[i].data.ano == ano))
 			mostra_evento( v[i] );
 }
