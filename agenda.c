@@ -18,9 +18,7 @@ struct pedido{
 };
 
 void le_pessoa( struct pessoa *p );
-void le_pessoa_v2( struct pessoa *p );
 void mostra_pessoa( struct pessoa x );
-void mostra_pessoa_v2( struct pessoa x );
 
 void le_data( struct data *p );
 void mostra_data (struct data x );
@@ -70,7 +68,7 @@ int main(int argc, char *argv[]) {
 			case 1:
 				n++;
 				v = realloc( v, sizeof( struct pessoa ) * n );
-				le_pessoa_v2( &v[n-1] );
+				le_pessoa( &v[n-1] );
 				//ordena_vetor( v, n ); // para o trabalho...
 				system("PAUSE");
 				break;
@@ -89,7 +87,7 @@ int main(int argc, char *argv[]) {
 					printf("Pessoa nao encotrada!\n");
 				else{
 					printf("%d : ", idx+1 );
-					mostra_pessoa_v2( v[idx] );
+					mostra_pessoa( v[idx] );
 				}
 				system("PAUSE");
 				break;
@@ -132,13 +130,13 @@ int main(int argc, char *argv[]) {
 	/*
 	
 	struct pessoa fulano;
-	le_pessoa_v2( &fulano );
-	mostra_pessoa_v2( fulano );
+	le_pessoa( &fulano );
+	mostra_pessoa( fulano );
 	
 	struct data y;
 	le_data( &y );	
 	fulano.nascimento = y;	
-	mostra_pessoa_v2( fulano );
+	mostra_pessoa( fulano );
 	
 	*/
 	
@@ -151,29 +149,10 @@ void le_pessoa( struct pessoa *p ){
 	printf("Digite o telefone: ");
 	scanf(" %[^\n]", p->telefone);
 	printf("Digite a data de nascimento:\n");
-	printf("Digite o dia: ");
-	scanf("%d", &p->nascimento.dia);
-	printf("Digite o mes: ");
-	scanf("%d", &p->nascimento.mes);
-	printf("Digite o ano: ");
-	scanf("%d", &p->nascimento.ano);
-}
-
-void le_pessoa_v2( struct pessoa *p ){
-	printf("Digite o nome: ");
-	scanf(" %[^\n]", p->nome);
-	printf("Digite o telefone: ");
-	scanf(" %[^\n]", p->telefone);
-	printf("Digite a data de nascimento:\n");
 	le_data( &p->nascimento );
 }
 
 void mostra_pessoa( struct pessoa x ){
-	printf("(%s, %s, [%d/%d/%d])\n",
-			x.nome, x.telefone, x.nascimento.dia, x.nascimento.mes, x.nascimento.ano);
-}
-
-void mostra_pessoa_v2( struct pessoa x ){
 	printf("(%s, %s, [", x.nome, x.telefone);
 	mostra_data( x.nascimento );
 	printf("])\n");
@@ -200,7 +179,7 @@ void mostra_vetor( struct pessoa *v, int n ){
 		printf("Lista de pessoas cadatradas:\n");
 		for( i = 0 ; i < n ; i++ ){
 			printf("%d : ", i+1 );
-			mostra_pessoa_v2( v[i] );
+			mostra_pessoa( v[i] );
 		}
 	}
 }
@@ -238,7 +217,7 @@ void mostra_vetor_por_letra( struct pessoa *v, int n , char letra ){
 	printf("Lista de pessoas cujo nome comeca com a letra %c\n", letra);
 	for( i = 0 ; i < n ; i++ )
 		if( v[i].nome[0] == letra )
-			mostra_pessoa_v2( v[i] );
+			mostra_pessoa( v[i] );
 }
 
 void mostra_vetor_por_ano( struct pessoa *v, int n , int ano ){
@@ -246,5 +225,5 @@ void mostra_vetor_por_ano( struct pessoa *v, int n , int ano ){
 	printf("Lista de pessoas que nesceram a partir do ano %d\n", ano);
 	for( i = 0 ; i < n ; i++ )
 		if( v[i].nascimento.ano >= ano )
-			mostra_pessoa_v2( v[i] );
+			mostra_pessoa( v[i] );
 }
