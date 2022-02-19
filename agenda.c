@@ -208,7 +208,7 @@ void mostra_vetor( struct pessoa *v, int n ){
 int busca_pessoa( struct pessoa *v, int n, char *nome ){
 	int i;
 	for( i = 0 ; i < n ; i++ )
-		if( strcmpi( v[i].nome, nome ) == 0 )
+		if( strcmp( v[i].nome, nome ) == 0 )
 			return i;
 	
 	return -1;
@@ -230,7 +230,7 @@ void ordena_vetor( struct pessoa *v, int n ){
 
 
 int compara_pessoa_nome( struct pessoa x, struct pessoa y ){
-	return strcmpi( x.nome, y.nome );	
+	return strcmp( x.nome, y.nome );	
 }
 
 void mostra_vetor_por_letra( struct pessoa *v, int n , char letra ){
