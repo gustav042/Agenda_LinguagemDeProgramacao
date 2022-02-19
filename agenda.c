@@ -53,6 +53,10 @@ int main(int argc, char *argv[]) {
 			fscanf( f, "%d", &v[i].data.dia);
 			fscanf( f, "%d", &v[i].data.mes);
 			fscanf( f, "%d", &v[i].data.ano);
+			fscanf( f, "%d", &v[i].inicio.hora);
+			fscanf( f, "%d", &v[i].inicio.minuto);
+			fscanf( f, "%d", &v[i].fim.hora);
+			fscanf( f, "%d", &v[i].fim.minuto);
 			fscanf( f, " %[^\n]", v[i].descricao);
 			fscanf( f, " %[^\n]", v[i].local);
 
@@ -132,6 +136,7 @@ int main(int argc, char *argv[]) {
 	fprintf( f, "%d\n", n); // 1a informação do arquivo é a quantidade de eventos
 	for( i = 0 ; i < n ; i++ ){
 		fprintf( f, "%d\n%d\n%d\n", v[i].data.dia, v[i].data.mes, v[i].data.ano);	
+		fprintf( f, "%d\n%d\n%d\n", v[i].inicio.hora, v[i].inicio.minuto, v[i].fim.hora, v[i].fim.minuto);	
 		fprintf( f, "%s\n%s\n", v[i].descricao, v[i].local);
 
 	}
@@ -158,6 +163,10 @@ int main(int argc, char *argv[]) {
 void le_evento( struct evento *p ){
 	printf("Digite a data:\n");
 	le_data( &p->data );
+	printf("Digite o horario de inicio:\n");
+	le_horario( &p->inicio );
+	printf("Digite o horario de fim:\n");
+	le_horario( &p->fim );
 	printf("Digite a descricao: ");
 	scanf(" %[^\n]", p->descricao);
 	printf("Digite o local: ");
@@ -168,6 +177,11 @@ void le_evento( struct evento *p ){
 void mostra_evento( struct evento x ){
 	printf("(%s, %s, [", x.descricao, x.local);
 	mostra_data( x.data );
+	printf("] ");
+	printf("[");
+	mostra_horario( x.inicio );
+	printf("-");
+	mostra_horario( x.fim );
 	printf("])\n");
 }
 
@@ -182,6 +196,17 @@ void le_data( struct data *p ){
 
 void mostra_data (struct data x ){
 	printf("%d/%d/%d", x.dia, x.mes, x.ano);
+}
+
+void le_horario( struct horario *p ){
+	printf("Digite as horas: ");
+	scanf("%d", &p->hora);
+	printf("Digite os minutos: ");
+	scanf("%d", &p->minuto);
+}
+void mostra_horario (struct horario x ){
+	printf("[%dh%dmin]", x.hora, x.minuto);
+
 }
 
 void mostra_vetor( struct evento *v, int n ){
