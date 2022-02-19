@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 				n++;
 				v = realloc( v, sizeof( struct evento ) * n );
 				le_evento( &v[n-1] );
-				//ordena_vetor( v, n ); // para o trabalho...
+				ordena_vetor( v, n ); // para o trabalho...
 				system("PAUSE");
 				break;
 			
