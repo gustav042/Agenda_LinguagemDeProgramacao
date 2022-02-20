@@ -287,6 +287,8 @@ void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora,
 
 	if(x < n){
 		for(i = x; i < n; i++){
+			strcpy(v[i].descricao, v[i+1].descricao);		
+			strcpy(v[i].local, v[i+1].local);
 			v[i].data.dia = v[i+1].data.dia;
 			v[i].data.mes = v[i+1].data.mes;
 			v[i].data.ano = v[i+1].data.ano;

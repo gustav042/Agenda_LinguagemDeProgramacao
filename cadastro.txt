@@ -1,4 +1,4 @@
-6
+5
 6
 7
 2002
@@ -23,20 +23,12 @@ pira
 0
 presencial
 udesc
-22
-2
-2022
-14
-30
-17
-prova de MDI
-hospicio
 21
 2
 2022
 9
 30
-12
+17
 prova de calculo
 manicomio
 20
@@ -44,6 +36,6 @@ manicomio
 2022
 0
 0
-0
+12
 volta as aulas
 Udesc
