@@ -36,12 +36,13 @@ void ordena_vetor( struct evento *v, int n );
 void mostra_vetor_por_letra( struct evento *v, int n , char letra );
 void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano );
 
+void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
+
 int main(int argc, char *argv[]) {
 	int i, n = 0;  // Quantidade de eventos
 	struct evento *v = NULL; // Ponteiro para o vetor de eventos
 	char descricao[30];
-	int idx, dia, mes, ano;
-	char letra;
+	int idx, dia, mes, ano, hora, minuto;
 	
 	FILE *f;
 	f = fopen( "cadastro.txt" , "rt" );
@@ -70,10 +71,13 @@ int main(int argc, char *argv[]) {
 	do{
 		system("CLS");
 		printf("1-Cadastrar\n2-Mostrar lista\n3-Mostra por data\n4-Mostra por descricao\n");
-		printf("5-Buscar por letra inicial\n6-Ordena\n7-Sair\n");
+		printf("5-Remover evento\n6-Sair\n");
 		scanf("%d", &opcao);
 		
 		switch( opcao ){
+			dia = 0;
+			mes = 0;
+			ano = 0; 
 			case 1:
 				n++;
 				v = realloc( v, sizeof( struct evento ) * n );
@@ -114,22 +118,30 @@ int main(int argc, char *argv[]) {
 				break;
 				
 			case 5:
-				printf("Digite uma letra: ");
-				scanf(" %c", &letra);
-				mostra_vetor_por_letra( v, n, letra );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {
+					printf("Digite a data do evento a ser removido.");
+					printf("\nDia: ");
+					scanf("%d", &dia);
+					printf("Mes: ");
+					scanf("%d", &mes);
+					printf("Ano: ");
+					scanf("%d", &ano);
+					printf("Digite o horario de inicio do evento a ser removido.");
+					printf("\nHora: ");
+					scanf("%d", &hora);
+					printf("Minuto: ");
+					scanf("%d", &minuto);
+					remove_evento(v, n, dia, mes, ano, hora, minuto);
+					n--;
+					v = realloc( v, sizeof( struct evento ) * n );
+				}
 				system("PAUSE");
 				break;
-				
-			case 6:
-				ordena_vetor( v, n );
-				printf("Vetor ordenado com sucesso!\n");
-				system("PAUSE");
-				break;
-			
-			
 		}
 		
-	}while( opcao != 7 );
+	}while( opcao != 6 );
 	
 	// Grava vetor no arquivo!
 	f = fopen( "cadastro.txt", "wt" );
@@ -264,4 +276,22 @@ void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano 
 	for( i = 0 ; i < n ; i++ )
 		if( (v[i].data.dia == dia) && (v[i].data.mes == mes) && (v[i].data.ano == ano))
 			mostra_evento( v[i] );
+}
+
+void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto){
+	int i, x;
+
+	for(i = 0; i < n; i++)
+		if(v[i].data.dia == dia && v[i].data.mes == mes && v[i].data.ano ==	ano && v[i].inicio.hora == hora && v[i].inicio.minuto == minuto)
+			x = i;
+
+	if(x < n){
+		for(i = x; i < n; i++){
+			v[i].data.dia = v[i+1].data.dia;
+			v[i].data.mes = v[i+1].data.mes;
+			v[i].data.ano = v[i+1].data.ano;
+			v[i].inicio.hora = v[i+1].inicio.hora;
+			v[i].inicio.minuto = v[i+1].inicio.minuto;
+		}		
+	}	
 }
