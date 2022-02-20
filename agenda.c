@@ -37,6 +37,8 @@ void mostra_vetor_por_letra( struct evento *v, int n , char letra );
 void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano );
 
 void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
+int sobrepor( struct evento *v, int n);
+
 
 int main(int argc, char *argv[]) {
 	int i, n = 0;  // Quantidade de eventos
@@ -82,9 +84,22 @@ int main(int argc, char *argv[]) {
 				n++;
 				v = realloc( v, sizeof( struct evento ) * n );
 				le_evento( &v[n-1] );
-				ordena_vetor( v, n ); // para o trabalho...
+				idx = sobrepor(v, n);
+				if( idx == -1 ){
+					printf("evento entra em conflito de horario com outro evento!\n");
+					dia = v[n-1].data.dia;
+					mes = v[n-1].data.mes;
+					ano = v[n-1].data.ano;
+					hora = v[n-1].inicio.hora;
+					minuto = v[n-1].inicio.minuto;
+					remove_evento(v, n, dia, mes, ano, hora, minuto);
+					n--;}
+				else{
+				ordena_vetor( v, n ); 
 				system("PAUSE");
 				break;
+				}
+
 			
 			case 2:
 				mostra_vetor( v, n );
@@ -296,4 +311,23 @@ void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora,
 			v[i].inicio.minuto = v[i+1].inicio.minuto;
 		}		
 	}	
+}
+
+int sobrepor( struct evento *v, int n){
+	int i, dia, mes, ano, horario_ini, horario_fim, horario_ini2, horario_fim2;
+	dia = v[n-1].data.dia;
+	mes = v[n-1].data.mes;
+	ano = v[n-1].data.ano;
+	horario_ini = 100*v[n-1].inicio.hora + v[n-1].inicio.minuto;
+	horario_fim = 100*v[n-1].fim.hora + v[n-1].fim.minuto;
+	for(i = 0; i < n; i++){
+	horario_ini2 = 100*v[i].inicio.hora + v[i].inicio.minuto;
+	horario_fim2 = 100*v[i].fim.hora + v[i].fim.minuto;
+	if(	dia == v[i].data.dia && mes == v[i].data.mes && ano == v[i].data.ano){
+		if((horario_ini > horario_ini2) && (horario_ini < horario_fim2))
+			return -1;
+		if((horario_fim > horario_ini2) && (horario_fim < horario_fim2))
+			return -1;
+		else 
+			return 0;}}
 }
