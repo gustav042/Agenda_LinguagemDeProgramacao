@@ -328,6 +328,8 @@ int sobrepor( struct evento *v, int n){
 			return -1;
 		if((horario_fim > horario_ini2) && (horario_fim < horario_fim2))
 			return -1;
+		if((horario_ini < horario_ini2) && (horario_fim > horario_fim2))
+			return -1;
 		else 
 			return 0;}}
 }
