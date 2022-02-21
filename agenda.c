@@ -39,6 +39,7 @@ void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano 
 void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
 int sobrepor( struct evento *v, int n);
 int validacao( struct evento *v, int n);
+void entrada_invalida(struct evento *v, int n);
 
 
 int main(int argc, char *argv[]) {
@@ -76,11 +77,11 @@ int main(int argc, char *argv[]) {
 		printf("1-Cadastrar\n2-Mostrar lista\n3-Mostra por data\n4-Mostra por descricao\n");
 		printf("5-Remover evento\n6-Sair\n");
 		scanf("%d", &opcao);
+		dia = 0;
+		mes = 0;
+		ano = 0;
 		
 		switch( opcao ){
-			dia = 0;
-			mes = 0;
-			ano = 0; 
 			case 1:
 				n++;
 				v = realloc( v, sizeof( struct evento ) * n );
@@ -88,14 +89,13 @@ int main(int argc, char *argv[]) {
 
 				valida = validacao(v, n);
 				idx = sobrepor(v, n);
-				if(valida == -1 || idx == -1){
+				if(valida == -1){
 					printf("Data ou hora com valores invalidos!\n");
-					dia = v[n-1].data.dia;
-					mes = v[n-1].data.mes;
-					ano = v[n-1].data.ano;
-					hora = v[n-1].inicio.hora;
-					minuto = v[n-1].inicio.minuto;
-					remove_evento(v, n, dia, mes, ano, hora, minuto);
+					entrada_invalida(v, n);
+					n--;
+				} else if(idx == -1){
+					printf("Um horario nao pode sobrepor o horario de outro evento!\n");
+					entrada_invalida(v, n);
 					n--;
 				} else {
 					ordena_vetor(v, n);
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 
 				system("PAUSE");
 				break;
-				}
+				
 
 			
 			case 2:
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 				} else {
 					mostra_vetor( v, n );
 				}
-				
+
 				system("PAUSE");
 				break;
 				
@@ -353,7 +353,7 @@ int sobrepor( struct evento *v, int n){
 }
 
 int validacao( struct evento *v, int n){
-	int i, dia, mes, ano, hora_ini, min_ini, hora_fim, min_fim;
+	int dia, mes, ano, hora_ini, min_ini, hora_fim, min_fim;
 
 	dia = v[n-1].data.dia;
 	mes = v[n-1].data.mes;
@@ -385,4 +385,15 @@ int validacao( struct evento *v, int n){
 		return -1;
 	
 	return 0;
+}
+
+void entrada_invalida(struct evento *v, int n){
+	int dia, mes, ano, hora, minuto;
+
+	dia = v[n-1].data.dia;
+	mes = v[n-1].data.mes;
+	ano = v[n-1].data.ano;
+	hora = v[n-1].inicio.hora;
+ 	minuto = v[n-1].inicio.minuto;
+	remove_evento(v, n-1, dia, mes, ano, hora, minuto);
 }
