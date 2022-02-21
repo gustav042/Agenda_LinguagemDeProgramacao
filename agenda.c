@@ -38,13 +38,14 @@ void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano 
 
 void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
 int sobrepor( struct evento *v, int n);
+int validacao( struct evento *v, int n);
 
 
 int main(int argc, char *argv[]) {
 	int i, n = 0;  // Quantidade de eventos
 	struct evento *v = NULL; // Ponteiro para o vetor de eventos
 	char descricao[30];
-	int idx, dia, mes, ano, hora, minuto;
+	int idx, dia, mes, ano, hora, minuto, valida;
 	
 	FILE *f;
 	f = fopen( "cadastro.txt" , "rt" );
@@ -84,6 +85,21 @@ int main(int argc, char *argv[]) {
 				n++;
 				v = realloc( v, sizeof( struct evento ) * n );
 				le_evento( &v[n-1] );
+
+				valida = validacao(v, n);
+				if(valida == -1){
+					printf("Data ou hora com valores invalidos!\n");
+					dia = v[n-1].data.dia;
+					mes = v[n-1].data.mes;
+					ano = v[n-1].data.ano;
+					hora = v[n-1].inicio.hora;
+					minuto = v[n-1].inicio.minuto;
+					remove_evento(v, n, dia, mes, ano, hora, minuto);
+					n--;
+				} else {
+					ordena_vetor(v, n);
+				}
+
 				idx = sobrepor(v, n);
 				if( idx == -1 ){
 					printf("evento entra em conflito de horario com outro evento!\n");
@@ -96,6 +112,7 @@ int main(int argc, char *argv[]) {
 					n--;}
 				else{
 				ordena_vetor( v, n ); 
+				
 				system("PAUSE");
 				break;
 				}
@@ -330,4 +347,39 @@ int sobrepor( struct evento *v, int n){
 			return -1;
 		else 
 			return 0;}}
+}
+
+int validacao( struct evento *v, int n){
+	int i, dia, mes, ano, hora_ini, min_ini, hora_fim, min_fim;
+
+	dia = v[n-1].data.dia;
+	mes = v[n-1].data.mes;
+	ano = v[n-1].data.ano;
+	hora_ini = v[n-1].inicio.hora;
+	min_ini = v[n-1].inicio.minuto;
+	hora_fim = v[n-1].fim.hora;
+	min_fim = v[n-1].fim.minuto;
+
+	if(dia < 1 || dia > 31)
+		return -1;
+
+	if(mes < 1 || mes > 12)
+		return -1;
+
+	if(ano < 2022)
+		return -1;
+	
+	if(hora_ini < 0 || hora_ini > 23)
+		return -1;
+
+	if(min_ini < 0 || min_ini > 59)
+		return -1;
+
+	if(hora_fim < 0 || hora_fim > 23)
+		return -1;
+
+	if(min_fim < 0 || min_fim > 59)
+		return -1;
+	
+	return 0;
 }
