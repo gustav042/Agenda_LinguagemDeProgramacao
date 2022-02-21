@@ -87,7 +87,8 @@ int main(int argc, char *argv[]) {
 				le_evento( &v[n-1] );
 
 				valida = validacao(v, n);
-				if(valida == -1){
+				idx = sobrepor(v, n);
+				if(valida == -1 || idx == -1){
 					printf("Data ou hora com valores invalidos!\n");
 					dia = v[n-1].data.dia;
 					mes = v[n-1].data.mes;
@@ -99,19 +100,6 @@ int main(int argc, char *argv[]) {
 				} else {
 					ordena_vetor(v, n);
 				}
-
-				idx = sobrepor(v, n);
-				if( idx == -1 ){
-					printf("evento entra em conflito de horario com outro evento!\n");
-					dia = v[n-1].data.dia;
-					mes = v[n-1].data.mes;
-					ano = v[n-1].data.ano;
-					hora = v[n-1].inicio.hora;
-					minuto = v[n-1].inicio.minuto;
-					remove_evento(v, n, dia, mes, ano, hora, minuto);
-					n--;}
-				else{
-				ordena_vetor( v, n ); 
 				
 				system("PAUSE");
 				break;
