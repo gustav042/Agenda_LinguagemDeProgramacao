@@ -100,40 +100,55 @@ int main(int argc, char *argv[]) {
 				} else {
 					ordena_vetor(v, n);
 				}
-				
+
 				system("PAUSE");
 				break;
 				}
 
 			
 			case 2:
-				mostra_vetor( v, n );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {
+					mostra_vetor( v, n );
+				}
+				
 				system("PAUSE");
 				break;
 				
 			case 3:
-				printf("Digite um dia: ");
-				scanf(" %d", &dia);
-				printf("Digite um mes: ");
-				scanf(" %d", &mes);
-				printf("Digite um ano: ");
-				scanf(" %d", &ano);
-				mostra_vetor_por_data( v, n, dia, mes, ano );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {
+					printf("Digite um dia: ");
+					scanf(" %d", &dia);
+					printf("Digite um mes: ");
+					scanf(" %d", &mes);
+					printf("Digite um ano: ");
+					scanf(" %d", &ano);
+					mostra_vetor_por_data( v, n, dia, mes, ano );
+				}
+
 				system("PAUSE");
 				break;
 
 				
 			case 4:
-				printf("Digite o descricao da evento a ser buscada: ");
-				scanf(" %[^\n]", descricao );
-				
-				idx = busca_evento( v, n, descricao );
-				if( idx == -1 )
-					printf("evento nao encotrada!\n");
-				else{
-					printf("%d : ", idx+1 );
-					mostra_evento( v[idx] );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {				
+					printf("Digite o descricao da evento a ser buscada: ");
+					scanf(" %[^\n]", descricao );
+					
+					idx = busca_evento( v, n, descricao );
+					if( idx == -1 )
+						printf("evento nao encotrada!\n");
+					else{
+						printf("%d : ", idx+1 );
+						mostra_evento( v[idx] );
+					}
 				}
+
 				system("PAUSE");
 				break;
 				
