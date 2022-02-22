@@ -37,13 +37,15 @@ void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano 
 
 void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
 int sobrepor( struct evento *v, int n);
+int validacao( struct evento *v, int n);
+void entrada_invalida(struct evento *v, int n);
 
 
 int main(int argc, char *argv[]) {
 	int i, n = 0;  // Quantidade de eventos
 	struct evento *v = NULL; // Ponteiro para o vetor de eventos
 	char descricao[30];
-	int idx, dia, mes, ano, hora, minuto;
+	int idx, dia, mes, ano, hora, minuto, valida;
 	
 	FILE *f;
 	f = fopen( "cadastro.txt" , "rt" );
@@ -74,60 +76,77 @@ int main(int argc, char *argv[]) {
 		printf("1-Cadastrar\n2-Mostrar lista\n3-Mostra por data\n4-Mostra por descricao\n");
 		printf("5-Remover evento\n6-Sair\n");
 		scanf("%d", &opcao);
+		dia = 0;
+		mes = 0;
+		ano = 0;
 		
 		switch( opcao ){
-			dia = 0;
-			mes = 0;
-			ano = 0; 
 			case 1:
 				n++;
 				v = realloc( v, sizeof( struct evento ) * n );
 				le_evento( &v[n-1] );
+
+				valida = validacao(v, n);
 				idx = sobrepor(v, n);
-				if( idx == -1 ){
-					printf("evento entra em conflito de horario com outro evento!\n");
-					dia = v[n-1].data.dia;
-					mes = v[n-1].data.mes;
-					ano = v[n-1].data.ano;
-					hora = v[n-1].inicio.hora;
-					minuto = v[n-1].inicio.minuto;
-					remove_evento(v, n, dia, mes, ano, hora, minuto);
+				if(valida == -1){
+					printf("Data ou hora com valores invalidos!\n");
+					entrada_invalida(v, n);
 					n--;
-					break;}
-				else{
-				ordena_vetor( v, n ); 
-				system("PAUSE");
-				break;
+				} else if(idx == -1){
+					printf("Um horario nao pode sobrepor o horario de outro evento!\n");
+					entrada_invalida(v, n);
+					n--;
+				} else {
+					ordena_vetor(v, n);
 				}
 
+				system("PAUSE");
+				break;
+				
+
 			case 2:
-				mostra_vetor( v, n );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {
+					mostra_vetor( v, n );
+				}
+
 				system("PAUSE");
 				break;
 				
 			case 3:
-				printf("Digite um dia: ");
-				scanf(" %d", &dia);
-				printf("Digite um mes: ");
-				scanf(" %d", &mes);
-				printf("Digite um ano: ");
-				scanf(" %d", &ano);
-				mostra_vetor_por_data( v, n, dia, mes, ano );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {
+					printf("Digite um dia: ");
+					scanf(" %d", &dia);
+					printf("Digite um mes: ");
+					scanf(" %d", &mes);
+					printf("Digite um ano: ");
+					scanf(" %d", &ano);
+					mostra_vetor_por_data( v, n, dia, mes, ano );
+				}
+
 				system("PAUSE");
 				break;
 
 				
 			case 4:
-				printf("Digite o descricao da evento a ser buscada: ");
-				scanf(" %[^\n]", descricao );
-				
-				idx = busca_evento( v, n, descricao );
-				if( idx == -1 )
-					printf("evento nao encotrada!\n");
-				else{
-					printf("%d : ", idx+1 );
-					mostra_evento( v[idx] );
+				if(n == 0){
+					printf("Nao ha nenhum evento registrado!\n");
+				} else {				
+					printf("Digite o descricao da evento a ser buscada: ");
+					scanf(" %[^\n]", descricao );
+					
+					idx = busca_evento( v, n, descricao );
+					if( idx == -1 )
+						printf("evento nao encotrada!\n");
+					else{
+						printf("%d : ", idx+1 );
+						mostra_evento( v[idx] );
+					}
 				}
+
 				system("PAUSE");
 				break;
 				
@@ -349,4 +368,50 @@ int sobrepor( struct evento *v, int n){
 		if((horario_ini < horario_ini2) && (horario_fim > horario_fim2))
 			return -1;}}
 	return 0;
+}
+
+int validacao( struct evento *v, int n){
+	int dia, mes, ano, hora_ini, min_ini, hora_fim, min_fim;
+
+	dia = v[n-1].data.dia;
+	mes = v[n-1].data.mes;
+	ano = v[n-1].data.ano;
+	hora_ini = v[n-1].inicio.hora;
+	min_ini = v[n-1].inicio.minuto;
+	hora_fim = v[n-1].fim.hora;
+	min_fim = v[n-1].fim.minuto;
+
+	if(dia < 1 || dia > 31)
+		return -1;
+
+	if(mes < 1 || mes > 12)
+		return -1;
+
+	if(ano < 2022)
+		return -1;
+	
+	if(hora_ini < 0 || hora_ini > 23)
+		return -1;
+
+	if(min_ini < 0 || min_ini > 59)
+		return -1;
+
+	if(hora_fim < 0 || hora_fim > 23)
+		return -1;
+
+	if(min_fim < 0 || min_fim > 59)
+		return -1;
+	
+	return 0;
+}
+
+void entrada_invalida(struct evento *v, int n){
+	int dia, mes, ano, hora, minuto;
+
+	dia = v[n-1].data.dia;
+	mes = v[n-1].data.mes;
+	ano = v[n-1].data.ano;
+	hora = v[n-1].inicio.hora;
+ 	minuto = v[n-1].inicio.minuto;
+	remove_evento(v, n-1, dia, mes, ano, hora, minuto);
 }
