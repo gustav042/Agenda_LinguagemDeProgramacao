@@ -290,7 +290,7 @@ int compara_data( struct evento x, struct evento y ){
 	else if(x.inicio.minuto < y.inicio.minuto)
 		return -1;
 	else if(x.inicio.minuto > y.inicio.minuto)
-		return -1;
+		return 0;
 	else 
 		return 0;
 }
