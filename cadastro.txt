@@ -1,12 +1,4 @@
-6
-24
 12
-2022
-22
-0
-23
-ceia de natal
-casa da vo
 6
 7
 2002
@@ -15,22 +7,6 @@ casa da vo
 0
 churras
 casa da julia
-6
-3
-2022
-0
-0
-0
-paintball
-pira
-3
-4
-2022
-0
-0
-0
-presencial
-udesc
 21
 2
 2022
@@ -39,6 +15,14 @@ udesc
 17
 prova de calculo
 manicomio
+6
+3
+2022
+0
+0
+0
+paintball
+pira
 20
 3
 2022
@@ -47,3 +31,67 @@ manicomio
 12
 volta as aulas
 Udesc
+3
+4
+2022
+0
+0
+0
+presencial
+udesc
+27
+5
+2022
+6
+0
+12
+stranger things 4
+em casa
+24
+6
+2022
+13
+30
+15
+sei la
+teste
+1
+7
+2022
+6
+0
+17
+stranger things 4 pt 2
+em casa
+22
+9
+2022
+14
+30
+17
+aniversario marlon
+casa do marlon
+24
+12
+2022
+22
+0
+23
+ceia de natal
+casa da vo
+18
+8
+2030
+8
+20
+9
+ultimos reparos foguete
+houston texas
+18
+8
+2030
+15
+30
+19
+ida a marte
+nasa

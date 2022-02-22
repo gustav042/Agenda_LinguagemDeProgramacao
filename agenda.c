@@ -28,8 +28,7 @@ void mostra_data (struct data x );
 void le_horario( struct horario *p );
 void mostra_horario (struct horario x );
 
-int compara_evento_descricao( struct evento x, struct evento y );
-
+int compara_data( struct evento x, struct evento y );
 void mostra_vetor( struct evento *v, int n );
 int busca_evento( struct evento *v, int n, char *descricao );
 void ordena_vetor( struct evento *v, int n );
@@ -93,14 +92,14 @@ int main(int argc, char *argv[]) {
 					hora = v[n-1].inicio.hora;
 					minuto = v[n-1].inicio.minuto;
 					remove_evento(v, n, dia, mes, ano, hora, minuto);
-					n--;}
+					n--;
+					break;}
 				else{
 				ordena_vetor( v, n ); 
 				system("PAUSE");
 				break;
 				}
 
-			
 			case 2:
 				mostra_vetor( v, n );
 				system("PAUSE");
@@ -231,9 +230,9 @@ void le_horario( struct horario *p ){
 	printf("Digite os minutos: ");
 	scanf("%d", &p->minuto);
 }
+
 void mostra_horario (struct horario x ){
 	printf("[%dh%dmin]", x.hora, x.minuto);
-
 }
 
 void mostra_vetor( struct evento *v, int n ){
@@ -263,18 +262,37 @@ void ordena_vetor( struct evento *v, int n ){
 	for( i = 0 ; i < n-1 ; i++ ){
 		int j, i_menor = i;
 		for( j = i+1 ; j < n ; j++ ){
-			if( compara_evento_descricao( v[j], v[i_menor ] ) < 0 )
-				i_menor = j;
-		}
+			if( compara_data( v[j], v[i_menor ] ) < 0 )
+					i_menor = j;}
 		struct evento temp = v[i];
 		v[i] = v[i_menor];
 		v[i_menor] = temp;
-	}
-}
+	}}
 
 
-int compara_evento_descricao( struct evento x, struct evento y ){
-	return strcmp( x.descricao, y.descricao );	
+int compara_data( struct evento x, struct evento y ){
+	if(x.data.ano < y.data.ano)
+		return -1;
+	else if(x.data.ano > y.data.ano)
+		return 0;
+	else if(x.data.mes < y.data.mes)
+		return -1;
+	else if(x.data.mes > y.data.mes)
+		return 0;
+	else if(x.data.dia < y.data.dia)
+		return -1;	
+	else if(x.data.dia > y.data.dia)
+		return 0;	
+	else if(x.inicio.hora < y.inicio.hora)
+		return -1;
+	else if(x.inicio.hora > y.inicio.hora)
+		return 0;
+	else if(x.inicio.minuto < y.inicio.minuto)
+		return -1;
+	else if(x.inicio.minuto > y.inicio.minuto)
+		return -1;
+	else 
+		return 0;
 }
 
 void mostra_vetor_por_letra( struct evento *v, int n , char letra ){
@@ -329,7 +347,6 @@ int sobrepor( struct evento *v, int n){
 		if((horario_fim > horario_ini2) && (horario_fim < horario_fim2))
 			return -1;
 		if((horario_ini < horario_ini2) && (horario_fim > horario_fim2))
-			return -1;
-		else 
-			return 0;}}
+			return -1;}}
+	return 0;
 }
