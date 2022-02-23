@@ -30,7 +30,7 @@ void mostra_horario (struct horario x );
 
 int compara_data( struct evento x, struct evento y );
 void mostra_vetor( struct evento *v, int n );
-int busca_evento( struct evento *v, int n, char *descricao );
+void busca_evento( struct evento *v, int n, char *descricao );
 void ordena_vetor( struct evento *v, int n );
 void mostra_vetor_por_letra( struct evento *v, int n , char letra );
 void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano );
@@ -138,14 +138,9 @@ int main(int argc, char *argv[]) {
 					printf("Digite o descricao da evento a ser buscada: ");
 					scanf(" %[^\n]", descricao );
 					
-					idx = busca_evento( v, n, descricao );
-					if( idx == -1 )
-						printf("evento nao encotrada!\n");
-					else{
-						printf("---- Evento %d ----\n", idx+1 );
-						mostra_evento( v[idx] );
+					busca_evento( v, n, descricao );
 					}
-				}
+				
 
 				system("PAUSE");
 				break;
@@ -255,13 +250,16 @@ void mostra_vetor( struct evento *v, int n ){
 	}
 }
 
-int busca_evento( struct evento *v, int n, char *descricao ){
-	int i;
+void busca_evento( struct evento *v, int n, char *descricao ){
+	int i, idx=0;
 	for( i = 0 ; i < n ; i++ )
-		if( strcmp( v[i].descricao, descricao ) == 0 )
-			return i;
-	
-	return -1;
+		if( strcmp( v[i].descricao, descricao ) == 0 ){
+			printf("---- Evento %d ----\n", i+1 );
+			mostra_evento( v[i] );
+			idx = 1;
+			}
+	if (idx == 0)
+		printf("Descricao nao encontrada!\n");
 }
 
 void ordena_vetor( struct evento *v, int n ){
@@ -311,11 +309,14 @@ void mostra_vetor_por_letra( struct evento *v, int n , char letra ){
 }
 
 void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano ){
-	int i;
+	int i,idx=0;
 	printf("Lista de eventos na data [%d/%d/%d]:\n\n", dia, mes, ano);
-	for( i = 0 ; i < n ; i++ )
-		if( (v[i].data.dia == dia) && (v[i].data.mes == mes) && (v[i].data.ano == ano))
+	for( i = 0 ; i < n ; i++ ){
+		if( (v[i].data.dia == dia) && (v[i].data.mes == mes) && (v[i].data.ano == ano)){
 			mostra_evento( v[i] );
+			idx=1;}}
+	if (idx == 0)
+		printf("Nao ha nenhum evento nessa data!\n");
 }
 
 int remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto){
