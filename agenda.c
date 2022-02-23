@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 					if( idx == -1 )
 						printf("evento nao encotrada!\n");
 					else{
-						printf("%d : ", idx+1 );
+						printf("---- Evento %d ----\n", idx+1 );
 						mostra_evento( v[idx] );
 					}
 				}
@@ -188,20 +188,7 @@ int main(int argc, char *argv[]) {
 	fclose( f );
 	
 	free( v );
-	
-	/*
-	
-	struct evento fulano;
-	le_evento( &fulano );
-	mostra_evento( fulano );
-	
-	struct data y;
-	le_data( &y );	
-	fulano.data = y;	
-	mostra_evento( fulano );
-	
-	*/
-	
+
 	return 0;
 }
 
@@ -220,14 +207,15 @@ void le_evento( struct evento *p ){
 }
 
 void mostra_evento( struct evento x ){
-	printf("(%s, %s, [", x.descricao, x.local);
+	printf("Data:_______________");
 	mostra_data( x.data );
-	printf("] ");
-	printf("[");
+	printf("Horario: ___________");
 	mostra_horario( x.inicio );
 	printf("-");
 	mostra_horario( x.fim );
-	printf("])\n");
+	printf("\n");
+	printf("Descricao e local:___");
+	printf("%s, %s \n\n", x.descricao, x.local);
 }
 
 void le_data( struct data *p ){
@@ -240,7 +228,7 @@ void le_data( struct data *p ){
 }
 
 void mostra_data (struct data x ){
-	printf("%d/%d/%d", x.dia, x.mes, x.ano);
+	printf("%d/%d/%d\n", x.dia, x.mes, x.ano);
 }
 
 void le_horario( struct horario *p ){
@@ -259,9 +247,9 @@ void mostra_vetor( struct evento *v, int n ){
 		printf("Nao ha eventos cadastradas!\n");
 	else{
 		int i;
-		printf("Lista de eventos cadatradas:\n");
+		printf("Lista de eventos cadatrados:\n\n");
 		for( i = 0 ; i < n ; i++ ){
-			printf("%d : ", i+1 );
+			printf("---- Evento %d ----\n", i+1 );
 			mostra_evento( v[i] );
 		}
 	}
@@ -324,20 +312,21 @@ void mostra_vetor_por_letra( struct evento *v, int n , char letra ){
 
 void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano ){
 	int i;
-	printf("Lista de eventos na data [%d/%d/%d]:\n", dia, mes, ano);
+	printf("Lista de eventos na data [%d/%d/%d]:\n\n", dia, mes, ano);
 	for( i = 0 ; i < n ; i++ )
 		if( (v[i].data.dia == dia) && (v[i].data.mes == mes) && (v[i].data.ano == ano))
 			mostra_evento( v[i] );
 }
 
 void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto){
-	int i, x;
+	int i, x=-1;
 
 	for(i = 0; i < n; i++)
 		if(v[i].data.dia == dia && v[i].data.mes == mes && v[i].data.ano ==	ano && v[i].inicio.hora == hora && v[i].inicio.minuto == minuto)
 			x = i;
-
-	if(x < n){
+	if(x == -1)
+		printf("Evento nao encontrado!\n");
+	else if(x < n){
 		for(i = x; i < n; i++){
 			strcpy(v[i].descricao, v[i+1].descricao);		
 			strcpy(v[i].local, v[i+1].local);
@@ -383,6 +372,10 @@ int validacao( struct evento *v, int n){
 
 	if(dia < 1 || dia > 31)
 		return -1;
+	
+	if(mes == 2 && dia > 28 && dia < 30)
+		if(ano % 4 != 0)
+			return -1;
 
 	if(mes < 1 || mes > 12)
 		return -1;
@@ -413,5 +406,5 @@ void entrada_invalida(struct evento *v, int n){
 	ano = v[n-1].data.ano;
 	hora = v[n-1].inicio.hora;
  	minuto = v[n-1].inicio.minuto;
-	remove_evento(v, n-1, dia, mes, ano, hora, minuto);
+	remove_evento(v, n, dia, mes, ano, hora, minuto);
 }
