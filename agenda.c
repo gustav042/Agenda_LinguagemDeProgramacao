@@ -35,7 +35,7 @@ void ordena_vetor( struct evento *v, int n );
 void mostra_vetor_por_letra( struct evento *v, int n , char letra );
 void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano );
 
-void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
+int remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto);
 int sobrepor( struct evento *v, int n);
 int validacao( struct evento *v, int n);
 void entrada_invalida(struct evento *v, int n);
@@ -166,19 +166,19 @@ int main(int argc, char *argv[]) {
 					scanf("%d", &hora);
 					printf("Minuto: ");
 					scanf("%d", &minuto);
-					remove_evento(v, n, dia, mes, ano, hora, minuto);
-					n--;
-					v = realloc( v, sizeof( struct evento ) * n );
-				}
+					int x = remove_evento(v, n, dia, mes, ano, hora, minuto);
+					if (x>0){
+						n--;
+						v = realloc( v, sizeof( struct evento ) * n );
+				}}
 				system("PAUSE");
 				break;
 		}
 		
 	}while( opcao != 6 );
 	
-	// Grava vetor no arquivo!
 	f = fopen( "cadastro.txt", "wt" );
-	fprintf( f, "%d\n", n); // 1a informação do arquivo é a quantidade de eventos
+	fprintf( f, "%d\n", n);
 	for( i = 0 ; i < n ; i++ ){
 		fprintf( f, "%d\n%d\n%d\n", v[i].data.dia, v[i].data.mes, v[i].data.ano);	
 		fprintf( f, "%d\n%d\n%d\n", v[i].inicio.hora, v[i].inicio.minuto, v[i].fim.hora, v[i].fim.minuto);	
@@ -244,10 +244,10 @@ void mostra_horario (struct horario x ){
 
 void mostra_vetor( struct evento *v, int n ){
 	if( n == 0 )
-		printf("Nao ha eventos cadastradas!\n");
+		printf("Nao ha eventos cadastrados!\n");
 	else{
 		int i;
-		printf("Lista de eventos cadatrados:\n\n");
+		printf("Lista de eventos cadastrados:\n\n");
 		for( i = 0 ; i < n ; i++ ){
 			printf("---- Evento %d ----\n", i+1 );
 			mostra_evento( v[i] );
@@ -318,14 +318,15 @@ void mostra_vetor_por_data( struct evento *v, int n , int dia, int mes, int ano 
 			mostra_evento( v[i] );
 }
 
-void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto){
+int remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora, int minuto){
 	int i, x=-1;
 
 	for(i = 0; i < n; i++)
 		if(v[i].data.dia == dia && v[i].data.mes == mes && v[i].data.ano ==	ano && v[i].inicio.hora == hora && v[i].inicio.minuto == minuto)
 			x = i;
-	if(x == -1)
+	if(x == -1){
 		printf("Evento nao encontrado!\n");
+		return -1;}
 	else if(x < n){
 		for(i = x; i < n; i++){
 			strcpy(v[i].descricao, v[i+1].descricao);		
@@ -335,6 +336,8 @@ void remove_evento(struct evento *v, int n, int dia, int mes, int ano, int hora,
 			v[i].data.ano = v[i+1].data.ano;
 			v[i].inicio.hora = v[i+1].inicio.hora;
 			v[i].inicio.minuto = v[i+1].inicio.minuto;
+			v[i].fim.hora = v[i+1].fim.hora;
+			v[i].fim.minuto = v[i+1].fim.minuto;
 		}		
 	}	
 }
@@ -344,7 +347,7 @@ int sobrepor( struct evento *v, int n){
 	dia = v[n-1].data.dia;
 	mes = v[n-1].data.mes;
 	ano = v[n-1].data.ano;
-	horario_ini = 100*v[n-1].inicio.hora + v[n-1].inicio.minuto;
+	horario_ini = 100*v[n-1].inicio.hora + v[n-1].inicio.minuto; //transformei o horario em um valor inteiro para comparar
 	horario_fim = 100*v[n-1].fim.hora + v[n-1].fim.minuto;
 	for(i = 0; i < n; i++){
 	horario_ini2 = 100*v[i].inicio.hora + v[i].inicio.minuto;
@@ -373,9 +376,12 @@ int validacao( struct evento *v, int n){
 	if(dia < 1 || dia > 31)
 		return -1;
 	
-	if(mes == 2 && dia > 28 && dia < 30)
-		if(ano % 4 != 0)
-			return -1;
+	if(mes == 2 && dia > 29) 
+		return -1;
+
+    if(mes == 2 && dia == 29 && ano % 4 != 0) //ano bissexto
+        return -1;
+
 
 	if(mes < 1 || mes > 12)
 		return -1;
